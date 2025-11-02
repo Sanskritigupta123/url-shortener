@@ -15,3 +15,21 @@ export async function generateNewShortUrl(req, res){
     })
     return res.json({shortID: sId})
 }
+
+export async function getAnalytics(req, res){
+    const sId = req.params.shortID;
+    const result = await URL.findOne({ sId});
+    return res.json({totalClicks: result.visitHistory.length, visitHistory: result.visitHistory})
+}
+
+export async function redirectUser(req, res){
+    const sId = req.params.shortId;
+    console.log("-=-=-=",sId);
+    const result = await URL.findOneAndUpdate({
+        shortId : sId,
+    },
+    {
+        $push: {visitHistory: {timestamp: Date.now()}}
+    });
+    res.redirect(result.redirectUrl);
+}
