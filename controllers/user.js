@@ -19,10 +19,12 @@ export async function handleUserLogin(req, res){
     }
     const user = await User.findOne({email, password})
     if(!user){
-        return res.rende("login", {error: "Invalid credentials"});
+        return res.render("login", {error: "Invalid credentials"});
     }
-    const sessionId = uuidv4();
-    setUser(sessionId, user);
-    res.cookie("sessionId", sessionId);
+    // const sessionId = uuidv4();
+    // setUser(sessionId, user);
+    const token = setUser(user);
+    // res.cookie("sessionId", sessionId);
+    res.cookie("sessionID", token);
     return res.redirect("/");
 }
