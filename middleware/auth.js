@@ -9,3 +9,15 @@ export async function restrictToAuthenticated(req, res, next) {
     req.user = user;
     next();
 }
+
+export function autho(req, res, next) {
+    const uid = req.headers["authorization"];
+    req.user = null;
+    if(!uid) {
+        return next();
+    }
+    const token = uid.split("Bearer ")[1];
+    const user = getUser(token)
+    req.user = user;
+    next();
+}
